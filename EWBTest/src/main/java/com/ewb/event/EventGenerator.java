@@ -1,4 +1,4 @@
-package com.ewb.event.adapter;
+package com.ewb.event;
 
 import java.io.Serializable;
 import java.util.List;
@@ -7,7 +7,7 @@ import com.ewb.event.entity.Event;
 
 public abstract class EventGenerator<T extends Serializable> {
 
-	private EventEnqueuer eventEnqueuer;
+	private EventEnqueuerImpl eventEnqueuer;
 	private EventFactory eventFactory;
 
 	public void sendEvent(Event event) {

@@ -9,16 +9,16 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 
-import com.ewb.event.adapter.EWBKafkaConsumer;
-import com.ewb.event.adapter.EWBKafkaProducer;
-import com.ewb.event.entity.KafkaMessage;
+import com.ewb.config.init.ConfigConstants;
+import com.ewb.config.init.ConfigFileLoader;
 import com.ewb.event.logger.CustomFileLogger;
+import com.ewb.kafkamessage.KafkaMessage;
 
 public class KafkaClientFactory {
 
 	private static final Logger LOGGER = CustomFileLogger.getInstance().getLogger(KafkaClientFactory.class.getName());
 
-	public EWBKafkaProducer createProducer(KafkaClientConfig clientConfigs) {
+	public static EWBKafkaProducer createProducer(KafkaClientConfig clientConfigs) {
 		LOGGER.info("Creating producer client ");
 		String topic = (String) ConfigFileLoader.CONFIG.getConfigPropertyValue(ConfigConstants.EWBPRODUCERS_TOPICS);
 		Integer offerTimeout = (Integer) ConfigFileLoader.CONFIG
@@ -32,12 +32,12 @@ public class KafkaClientFactory {
 		return new EWBKafkaProducer(producer, topic, offerTimeout);
 	}
 
-	private Properties getKafkaProducerConfig(String host, Integer port, String clientId) {
+	private static Properties getKafkaProducerConfig(String host, Integer port, String clientId) {
 		return getKafkaProducerConfig(host, port, clientId, StringSerializer.class.getName(),
 				StringSerializer.class.getName());
 	}
 
-	private Properties getKafkaProducerConfig(String host, Integer port, String clientId, String keySerializer,
+	private static Properties getKafkaProducerConfig(String host, Integer port, String clientId, String keySerializer,
 			String valueSerializer) {
 		Properties props = new Properties();
 		props.put("bootstrap.servers", host + ":" + port);
@@ -49,7 +49,7 @@ public class KafkaClientFactory {
 		return props;
 	}
 
-	public EWBKafkaConsumer createConsumer(KafkaClientConfig clientConfig) {
+	public static EWBKafkaConsumer createConsumer(KafkaClientConfig clientConfig) {
 		LOGGER.info("Creating consumer client");
 		String topics = (String) ConfigFileLoader.CONFIG.getConfigPropertyValue(ConfigConstants.EWBCONSUMERS_TOPICS);
 		Long pollTimeout = (Long) ConfigFileLoader.CONFIG
@@ -62,12 +62,12 @@ public class KafkaClientFactory {
 		return new EWBKafkaConsumer(consumer, Arrays.asList(topics.split(",")), pollTimeout);
 	}
 
-	private Properties getKafkaConsumerConfig(String host, Integer port, String groupId) {
+	private static Properties getKafkaConsumerConfig(String host, Integer port, String groupId) {
 		return getKafkaConsumerConfig(host, port, groupId, StringDeserializer.class.getName(),
 				StringDeserializer.class.getName());
 	}
 
-	private Properties getKafkaConsumerConfig(String host, Integer port, String groupId, String keyDeserializer,
+	private static Properties getKafkaConsumerConfig(String host, Integer port, String groupId, String keyDeserializer,
 			String valueDeserializer) {
 		Properties props = new Properties();
 		props.put("bootstrap.servers", host + ":" + port);

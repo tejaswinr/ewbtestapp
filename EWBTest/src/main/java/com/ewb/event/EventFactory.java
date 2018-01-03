@@ -1,4 +1,4 @@
-package com.ewb.event.adapter;
+package com.ewb.event;
 
 import com.ewb.event.entity.Event;
 import com.ewb.event.entity.EventCategory;

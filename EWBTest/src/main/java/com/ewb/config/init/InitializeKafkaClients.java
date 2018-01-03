@@ -1,4 +1,4 @@
-package com.ewb.event.main;
+package com.ewb.config.init;
 
 import java.util.List;
 
@@ -6,10 +6,10 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.producer.Producer;
 
 import com.ewb.config.client.CacheEventTypeKafkaClientMap;
+import com.ewb.config.client.EWBKafkaConsumer;
+import com.ewb.config.client.EWBKafkaProducer;
 import com.ewb.config.client.KafkaClientConfig;
 import com.ewb.config.client.KafkaClientFactory;
-import com.ewb.event.adapter.EWBKafkaConsumer;
-import com.ewb.event.adapter.EWBKafkaProducer;
 
 public class InitializeKafkaClients {
 

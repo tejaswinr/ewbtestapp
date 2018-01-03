@@ -1,4 +1,4 @@
-package com.ewb.event.adapter;
+package com.ewb.config.client;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -7,8 +7,8 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 
-import com.ewb.event.entity.KafkaMessage;
 import com.ewb.event.logger.CustomFileLogger;
+import com.ewb.kafkamessage.KafkaMessage;
 
 public class EWBKafkaProducer implements Runnable {
 

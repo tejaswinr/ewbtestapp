@@ -1,9 +1,10 @@
-package com.ewb.event.main;
+package com.ewb.config.init;
 
 import java.util.List;
 
 import com.ewb.config.client.KafkaClientConfig;
 import com.ewb.config.dao.KafkaClientConfigDao;
+import com.ewb.event.router.InitEventRouterService;
 
 public class InitApplication {
 	private final String systemId;

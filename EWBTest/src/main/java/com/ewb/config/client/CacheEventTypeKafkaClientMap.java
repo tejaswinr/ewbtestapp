@@ -2,8 +2,6 @@ package com.ewb.config.client;
 
 import java.util.Map;
 
-import com.ewb.event.adapter.EWBKafkaConsumer;
-import com.ewb.event.adapter.EWBKafkaProducer;
 import com.ewb.event.entity.EventCategory;
 import com.ewb.event.entity.EventType;
 

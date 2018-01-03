@@ -1,7 +1,6 @@
-package com.ewb.event.adapter;
+package com.ewb.kafkamessage;
 
 import com.ewb.event.entity.Event;
-import com.ewb.event.entity.KafkaMessage;
 
 public class KafkaMessageFactory {
 

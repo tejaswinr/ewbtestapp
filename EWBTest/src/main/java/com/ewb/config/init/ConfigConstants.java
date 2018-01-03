@@ -1,4 +1,4 @@
-package com.ewb.config.client;
+package com.ewb.config.init;
 
 @SuppressWarnings("rawtypes")
 public enum ConfigConstants {
