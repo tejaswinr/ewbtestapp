@@ -2,7 +2,7 @@ package com.ewb.kafkamessage;
 
 import java.util.Date;
 
-import com.ewb.event.entity.Event;
+import com.ewb.event.Event;
 
 public class KafkaMessage {
 

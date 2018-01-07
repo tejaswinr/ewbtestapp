@@ -1,4 +1,4 @@
-package com.ewb.event.entity;
+package com.ewb.event;
 
 import java.io.Serializable;
 

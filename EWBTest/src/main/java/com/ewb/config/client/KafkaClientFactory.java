@@ -2,6 +2,7 @@ package com.ewb.config.client;
 
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.concurrent.BlockingQueue;
 
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -11,14 +12,17 @@ import org.slf4j.Logger;
 
 import com.ewb.config.init.ConfigConstants;
 import com.ewb.config.init.ConfigFileLoader;
-import com.ewb.event.logger.CustomFileLogger;
 import com.ewb.kafkamessage.KafkaMessage;
+import com.ewb.kafkamessage.KafkaMessageSerDe;
+import com.ewb.kafkamessage.KafkaMessageVO;
+import com.ewb.logger.CustomFileLogger;
 
 public class KafkaClientFactory {
 
 	private static final Logger LOGGER = CustomFileLogger.getInstance().getLogger(KafkaClientFactory.class.getName());
 
-	public static EWBKafkaProducer createProducer(KafkaClientConfig clientConfigs) {
+	public static KafkaProducerWorker createProducer(KafkaClientConfig clientConfigs,
+			BlockingQueue<KafkaMessageVO> producerQueue) {
 		LOGGER.info("Creating producer client ");
 		String topic = (String) ConfigFileLoader.CONFIG.getConfigPropertyValue(ConfigConstants.EWBPRODUCERS_TOPICS);
 		Integer offerTimeout = (Integer) ConfigFileLoader.CONFIG
@@ -29,12 +33,12 @@ public class KafkaClientFactory {
 				.getConfigPropertyValue(ConfigConstants.EWBPRODUCERS_CLIENTID);
 		Properties producerConfig = getKafkaProducerConfig(host, port, clientId);
 		KafkaProducer<String, KafkaMessage> producer = new KafkaProducer<>(producerConfig);
-		return new EWBKafkaProducer(producer, topic, offerTimeout);
+		return new KafkaProducerWorker(producer, producerQueue, offerTimeout);
 	}
 
 	private static Properties getKafkaProducerConfig(String host, Integer port, String clientId) {
 		return getKafkaProducerConfig(host, port, clientId, StringSerializer.class.getName(),
-				StringSerializer.class.getName());
+				KafkaMessageSerDe.class.getName());
 	}
 
 	private static Properties getKafkaProducerConfig(String host, Integer port, String clientId, String keySerializer,
@@ -49,7 +53,8 @@ public class KafkaClientFactory {
 		return props;
 	}
 
-	public static EWBKafkaConsumer createConsumer(KafkaClientConfig clientConfig) {
+	public static KafkaConsumerWorker createConsumer(KafkaClientConfig clientConfig,
+			BlockingQueue<KafkaMessageVO> consumerQueue) {
 		LOGGER.info("Creating consumer client");
 		String topics = (String) ConfigFileLoader.CONFIG.getConfigPropertyValue(ConfigConstants.EWBCONSUMERS_TOPICS);
 		Long pollTimeout = (Long) ConfigFileLoader.CONFIG
@@ -59,12 +64,12 @@ public class KafkaClientFactory {
 		String groupId = (String) ConfigFileLoader.CONFIG.getConfigPropertyValue(ConfigConstants.EWBCONSUMERS_GROUPID);
 		Properties consumerConfig = getKafkaConsumerConfig(host, port, groupId);
 		KafkaConsumer<String, KafkaMessage> consumer = new KafkaConsumer<>(consumerConfig);
-		return new EWBKafkaConsumer(consumer, Arrays.asList(topics.split(",")), pollTimeout);
+		return new KafkaConsumerWorker(consumer, consumerQueue, Arrays.asList(topics.split(",")), pollTimeout);
 	}
 
 	private static Properties getKafkaConsumerConfig(String host, Integer port, String groupId) {
 		return getKafkaConsumerConfig(host, port, groupId, StringDeserializer.class.getName(),
-				StringDeserializer.class.getName());
+				KafkaMessageSerDe.class.getName());
 	}
 
 	private static Properties getKafkaConsumerConfig(String host, Integer port, String groupId, String keyDeserializer,

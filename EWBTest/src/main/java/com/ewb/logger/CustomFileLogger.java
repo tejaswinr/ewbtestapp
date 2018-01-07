@@ -1,4 +1,4 @@
-package com.ewb.event.logger;
+package com.ewb.logger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;;

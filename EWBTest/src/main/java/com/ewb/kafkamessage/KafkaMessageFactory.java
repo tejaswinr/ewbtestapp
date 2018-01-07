@@ -1,14 +1,10 @@
 package com.ewb.kafkamessage;
 
-import com.ewb.event.entity.Event;
+import com.ewb.event.Event;
 
-public class KafkaMessageFactory {
+public interface KafkaMessageFactory {
 
-	public KafkaMessage createKafkaMessage(Event event) {
-		return null;
-	}
-
-	public Event retreiveEvent(KafkaMessage message) {
+	public default KafkaMessage createKafkaMessage(Event event) {
 		return null;
 	}
 

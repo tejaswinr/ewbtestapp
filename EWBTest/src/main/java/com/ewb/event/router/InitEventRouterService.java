@@ -1,9 +1,9 @@
 package com.ewb.event.router;
 
-import com.ewb.config.client.CacheEventTypeKafkaClientMap;
+import com.ewb.config.client.EventTypeCategoryCache;
 
 public class InitEventRouterService {
-	private CacheEventTypeKafkaClientMap cache;
+	private EventTypeCategoryCache cache;
 	private EventRouterFactory eventRouterFactory;
 
 	public InitEventRouterService() {

@@ -7,29 +7,30 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 
-import com.ewb.event.logger.CustomFileLogger;
 import com.ewb.kafkamessage.KafkaMessage;
+import com.ewb.kafkamessage.KafkaMessageVO;
+import com.ewb.logger.CustomFileLogger;
 
-public class EWBKafkaProducer implements Runnable {
+public class KafkaProducerWorker implements Runnable {
 
-	private static final Logger LOGGER = CustomFileLogger.getInstance().getLogger(EWBKafkaProducer.class.getName());
-	private final String topic;
+	private static final Logger LOGGER = CustomFileLogger.getInstance().getLogger(KafkaProducerWorker.class.getName());
 	private final KafkaProducer<String, KafkaMessage> producer;
 	private boolean keepRunning;
-	private long offerTimeout;
-	private BlockingQueue<KafkaMessage> producerQueue;
+	private int offerTimeout;
+	private BlockingQueue<KafkaMessageVO> producerQueue;
 
-	public EWBKafkaProducer(KafkaProducer<String, KafkaMessage> producer, String topic, int offerTimeout) {
+	public KafkaProducerWorker(KafkaProducer<String, KafkaMessage> producer, BlockingQueue<KafkaMessageVO> producerQueue,
+			int offerTimeout) {
 		super();
-		this.topic = topic;
 		this.producer = producer;
+		this.producerQueue = producerQueue;
 		this.keepRunning = true;
 		this.offerTimeout = offerTimeout;
 	}
 
 	@Override
 	public void run() {
-		LOGGER.debug("Starting kafka producer for topic=" + topic);
+		LOGGER.debug("Starting kafka producer..");
 		if (producer == null) {
 			LOGGER.error("Producer is null.. returning");
 			return;
@@ -37,11 +38,11 @@ public class EWBKafkaProducer implements Runnable {
 		try {
 			if (producer != null) {
 				while (true) {
-					KafkaMessage message = producerQueue.poll(offerTimeout, TimeUnit.SECONDS);
-					if (message != null) {
+					KafkaMessageVO messageVo = producerQueue.poll(offerTimeout, TimeUnit.SECONDS);
+					if (messageVo != null) {
 						ProducerRecord<String, KafkaMessage> producerRecord = new ProducerRecord<String, KafkaMessage>(
-								topic, message);
-						LOGGER.debug("sending message: " + message);
+								messageVo.getKafkaTopic(), messageVo.getKafkaMessage());
+						LOGGER.debug("sending message: " + messageVo);
 						producer.send(producerRecord);
 						LOGGER.debug("message sent");
 					} else {
@@ -66,7 +67,7 @@ public class EWBKafkaProducer implements Runnable {
 		return offerTimeout;
 	}
 
-	public void setPollTimeoutInMs(long pollTimeoutInMs) {
+	public void setPollTimeoutInMs(int pollTimeoutInMs) {
 		this.offerTimeout = pollTimeoutInMs;
 	}
 

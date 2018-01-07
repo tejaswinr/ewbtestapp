@@ -1,7 +1,7 @@
 package com.ewb.event.router;
 
-import com.ewb.event.entity.EventCategory;
-import com.ewb.event.entity.EventType;
+import com.ewb.event.EventCategory;
+import com.ewb.event.EventType;
 
 public class EventRouterFactory {
 

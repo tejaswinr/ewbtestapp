@@ -1,9 +1,29 @@
 package com.ewb.event;
 
-import com.ewb.event.entity.Event;
+import java.util.concurrent.BlockingQueue;
 
-public interface EventEnqueuer {
+import com.ewb.common.AbstractEnqueuer;
 
-	public void enqueueEvent(Event event);
+public class EventEnqueuer extends AbstractEnqueuer<Event> {
+
+	public EventEnqueuer(BlockingQueue<Event> inboundQueue, int offerTimeout) {
+		super(inboundQueue, offerTimeout);
+	}
+
+	public EventEnqueuer(BlockingQueue<Event> inboundQueue) {
+		super(inboundQueue);
+	}
+
+	@Override
+	public boolean enqueue(Event event) {
+		try {
+			return super.enqueue(event);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+
+	}
 
 }

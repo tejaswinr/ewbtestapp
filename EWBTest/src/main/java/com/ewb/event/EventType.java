@@ -1,4 +1,4 @@
-package com.ewb.event.entity;
+package com.ewb.event;
 
 public enum EventType {
 

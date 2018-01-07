@@ -8,7 +8,7 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 
-import com.ewb.event.logger.CustomFileLogger;
+import com.ewb.logger.CustomFileLogger;
 
 public enum ConfigFileLoader {
 
