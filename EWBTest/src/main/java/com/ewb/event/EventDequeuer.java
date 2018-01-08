@@ -43,10 +43,9 @@ public class EventDequeuer extends AbstractDequeuer<Event> implements Runnable {
 		while (keepRunning) {
 			try {
 				Event event = dequeue();
-				if (event == null) {
-					continue;
+				if (event != null) {
+					updateEventListeners(event);
 				}
-				updateEventListeners(event);
 			} catch (InterruptedException e) {
 				// LOGGER
 				e.printStackTrace();
@@ -55,7 +54,14 @@ public class EventDequeuer extends AbstractDequeuer<Event> implements Runnable {
 		}
 	}
 
-	public boolean isKeepRunning() {
+	@Override
+	protected void executeOnPollTimeOut() {
+		// TODO LOGGER
+
+	}
+
+	@Override
+	public boolean keepRunning() {
 		return keepRunning;
 	}
 

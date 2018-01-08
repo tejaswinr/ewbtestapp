@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 
 import com.ewb.common.Listener;
 
-public abstract class AbstractKafkaMessageListener implements Listener<KafkaMessage> {
+public abstract class AbstractKafkaMessageListener implements Listener<KafkaMessageVO> {
 
 	private final ExecutorService kafkaMsgProcService;
 
@@ -14,7 +14,7 @@ public abstract class AbstractKafkaMessageListener implements Listener<KafkaMess
 	}
 
 	@Override
-	public final void updateListener(KafkaMessage kafkaMessage) {
+	public final void updateListener(KafkaMessageVO kafkaMessage) {
 		if (kafkaMsgProcService != null) {
 			kafkaMsgProcService.submit(() -> processKafkaMessage(kafkaMessage));
 		} else {
@@ -22,6 +22,6 @@ public abstract class AbstractKafkaMessageListener implements Listener<KafkaMess
 		}
 	}
 
-	protected abstract void processKafkaMessage(KafkaMessage kafkaMessage);
+	protected abstract void processKafkaMessage(KafkaMessageVO kafkaMessage);
 
 }

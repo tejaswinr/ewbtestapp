@@ -5,9 +5,9 @@ import java.util.List;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.producer.Producer;
 
-import com.ewb.config.client.EventTypeCategoryCache;
 import com.ewb.config.client.KafkaConsumerWorker;
 import com.ewb.config.client.KafkaProducerWorker;
+import com.ewb.config.cache.EventTypeCategoryTopicCache;
 import com.ewb.config.client.KafkaClientConfig;
 import com.ewb.config.client.KafkaClientFactory;
 
@@ -15,7 +15,7 @@ public class InitializeKafkaClients {
 
 	private List<KafkaClientConfig> clientConfigs;
 	private KafkaClientFactory clientFactory;
-	private EventTypeCategoryCache cache;
+	private EventTypeCategoryTopicCache cache;
 
 	public InitializeKafkaClients(String systemId) {
 		super();

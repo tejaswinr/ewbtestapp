@@ -6,12 +6,16 @@ import com.ewb.common.AbstractEnqueuer;
 
 public class EventEnqueuer extends AbstractEnqueuer<Event> {
 
+	private boolean keepRunning;
+
 	public EventEnqueuer(BlockingQueue<Event> inboundQueue, int offerTimeout) {
 		super(inboundQueue, offerTimeout);
+		this.keepRunning = true;
 	}
 
 	public EventEnqueuer(BlockingQueue<Event> inboundQueue) {
 		super(inboundQueue);
+		this.keepRunning = true;
 	}
 
 	@Override
@@ -26,4 +30,18 @@ public class EventEnqueuer extends AbstractEnqueuer<Event> {
 
 	}
 
+	@Override
+	protected void executeOnOfferTimeOut() {
+		// TODO LOGGER
+
+	}
+
+	@Override
+	public boolean keepRunning() {
+		return keepRunning;
+	}
+
+	public void setKeepRunning(boolean keepRunning) {
+		this.keepRunning = keepRunning;
+	}
 }

@@ -19,8 +19,24 @@ public abstract class AbstractEnqueuer<T> implements Enqueuer<T> {
 		this.offerTimeout = offerTimeout;
 	}
 
+	protected abstract void executeOnOfferTimeOut();
+
+	public abstract boolean keepRunning();
+
 	public boolean enqueue(T object) throws InterruptedException {
-		return inboundQueue.offer(object, offerTimeout, TimeUnit.SECONDS);
+		if (inboundQueue == null) {
+			// TODO throw exception
+			return false;
+		}
+		while (keepRunning()) {
+			boolean status = inboundQueue.offer(object, offerTimeout, TimeUnit.SECONDS);
+			if (!status) {
+				executeOnOfferTimeOut();
+				continue;
+			}
+			return status;
+		}
+		return false;
 	}
 
 }

@@ -1,13 +1,13 @@
 package com.ewb.config.client;
 
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 
+import com.ewb.common.Enqueuer;
 import com.ewb.kafkamessage.KafkaMessage;
 import com.ewb.kafkamessage.KafkaMessageVO;
 import com.ewb.logger.CustomFileLogger;
@@ -15,18 +15,18 @@ import com.ewb.logger.CustomFileLogger;
 public class KafkaConsumerWorker implements Runnable {
 
 	private static final Logger LOGGER = CustomFileLogger.getInstance().getLogger(KafkaConsumerWorker.class.getName());
-	private final List<String> topics;
 	private final KafkaConsumer<String, KafkaMessage> consumer;
+	private final Enqueuer<KafkaMessageVO> kafkaMessageEnqueuer;
+	private final List<String> topics;
 	private boolean keepRunning;
-	private BlockingQueue<KafkaMessageVO> consumerQueue;
 	private long pollTimeoutInMs;
 
-	public KafkaConsumerWorker(KafkaConsumer<String, KafkaMessage> consumer, BlockingQueue<KafkaMessageVO> consumerQueue,
-			List<String> topics, long pollTimeoutInMs) {
+	public KafkaConsumerWorker(KafkaConsumer<String, KafkaMessage> consumer,
+			Enqueuer<KafkaMessageVO> kafkaMessageEnqueuer, List<String> topics, long pollTimeoutInMs) {
 		super();
 		this.topics = topics;
 		this.consumer = consumer;
-		this.consumerQueue = consumerQueue;
+		this.kafkaMessageEnqueuer = kafkaMessageEnqueuer;
 		this.keepRunning = true;
 		this.pollTimeoutInMs = pollTimeoutInMs;
 	}
@@ -46,7 +46,13 @@ public class KafkaConsumerWorker implements Runnable {
 			}
 			for (ConsumerRecord<String, KafkaMessage> record : records) {
 				LOGGER.debug("offset =" + record.offset() + ", key =" + record.key() + ", value = " + record.value());
-				consumerQueue.offer(new KafkaMessageVO(record.value(), record.topic()));
+				try {
+					kafkaMessageEnqueuer.enqueue(new KafkaMessageVO(record.value(), record.topic()));
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					keepRunning = false;
+				}
 			}
 		}
 		consumer.close();

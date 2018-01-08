@@ -31,9 +31,15 @@ public class KafkaClientFactory {
 		Integer port = (Integer) ConfigFileLoader.CONFIG.getConfigPropertyValue(ConfigConstants.BROKER_PORT);
 		String clientId = (String) ConfigFileLoader.CONFIG
 				.getConfigPropertyValue(ConfigConstants.EWBPRODUCERS_CLIENTID);
+		KafkaProducer<String, KafkaMessage> producer = createKafkaProducer(host, port, clientId);
+		// return new KafkaProducerWorker(producer, producerQueue,
+		// offerTimeout);
+		return null;
+	}
+
+	public static KafkaProducer<String, KafkaMessage> createKafkaProducer(String host, Integer port, String clientId) {
 		Properties producerConfig = getKafkaProducerConfig(host, port, clientId);
-		KafkaProducer<String, KafkaMessage> producer = new KafkaProducer<>(producerConfig);
-		return new KafkaProducerWorker(producer, producerQueue, offerTimeout);
+		return new KafkaProducer<>(producerConfig);
 	}
 
 	private static Properties getKafkaProducerConfig(String host, Integer port, String clientId) {
@@ -64,7 +70,9 @@ public class KafkaClientFactory {
 		String groupId = (String) ConfigFileLoader.CONFIG.getConfigPropertyValue(ConfigConstants.EWBCONSUMERS_GROUPID);
 		Properties consumerConfig = getKafkaConsumerConfig(host, port, groupId);
 		KafkaConsumer<String, KafkaMessage> consumer = new KafkaConsumer<>(consumerConfig);
-		return new KafkaConsumerWorker(consumer, consumerQueue, Arrays.asList(topics.split(",")), pollTimeout);
+		// return new KafkaConsumerWorker(consumer, consumerQueue,
+		// Arrays.asList(topics.split(",")), pollTimeout);
+		return null;
 	}
 
 	private static Properties getKafkaConsumerConfig(String host, Integer port, String groupId) {

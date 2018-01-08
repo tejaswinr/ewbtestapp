@@ -1,9 +1,9 @@
 package com.ewb.event.router;
 
-import com.ewb.config.client.EventTypeCategoryCache;
+import com.ewb.config.cache.EventTypeCategoryTopicCache;
 
 public class InitEventRouterService {
-	private EventTypeCategoryCache cache;
+	private EventTypeCategoryTopicCache cache;
 	private EventRouterFactory eventRouterFactory;
 
 	public InitEventRouterService() {
